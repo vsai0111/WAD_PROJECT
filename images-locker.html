@@ -55,8 +55,10 @@
     }
 
     #content {
+      margin-top: 80px;
       margin-left: 250px;
       padding: 20px;
+      position: relative;
     }
 
     .container {
@@ -69,12 +71,76 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
       margin: 10px;
-      position: absolute;
-      top: 20%;
-      left: 55%;
-      transform: translate(-50%, -50%);
+      height: 100%; /* Adjusted height to cover the entire viewport height */
+    }
+
+    #uploadedImagesContainer {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center; /* Center horizontally within the container */
+    }
+
+    #uploadedImagesContainer img {
+      max-width: 100px;
+      height: auto;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #imagesLockerUploadForm {
+      width: 100%; /* Adjusted width to cover the entire container width */
+      max-width: 400px; /* Added max-width to control the form width */
+      margin: 0 auto; /* Center horizontally */
+    }
+
+    #imagesLockerUploadForm button {
+      margin-top: 10px;
+    }
+    
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #4dd4a4;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
     }
   </style>
+
+  <script>
+    function uploadImage() {
+      var imageTitleInput = document.getElementById("imageTitle");
+      var imageFileInput = document.getElementById("imageFile");
+
+      var imageTitle = imageTitleInput.value;
+      var imageFile = imageFileInput.files[0];
+
+      if (imageTitle.trim() !== "" && imageFile) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var imageElement = document.createElement("img");
+          imageElement.src = e.target.result;
+
+          var container = document.getElementById("uploadedImagesContainer");
+          container.appendChild(imageElement);
+
+          // Save the image data to local storage (optional)
+          localStorage.setItem("uploadedImage_" + imageTitle, e.target.result);
+        };
+
+        reader.readAsDataURL(imageFile);
+
+        imageTitleInput.value = "";
+        imageFileInput.value = "";
+      } else {
+        alert("Please provide both title and image file.");
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -114,10 +180,8 @@
   <div class="container" id="imagesLockerForm">
     <h2>Images Locker</h2>
   
-    <!-- Placeholder content -->
     <p>Welcome to the Images Locker. You can securely store and manage your images here.</p>
   
-    <!-- Example form for image upload -->
     <form id="imagesLockerUploadForm">
       <label for="imageTitle">Image Title:</label>
       <input type="text" id="imageTitle" name="imageTitle" required>
@@ -130,13 +194,10 @@
       </center>
     </form>
 
-    <!-- Add additional content or features as needed -->
-  
-    <!-- Example script for handling image upload -->
-    
+    <div id="uploadedImagesContainer"></div>
   </div>
 
-  <footer class="fixed-bottom">
+  <footer>
     <center>Copyright &copy; Securesystem.com All rights Reserved.</center>
   </footer>
 
